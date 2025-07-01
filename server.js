@@ -7,7 +7,7 @@ const PORT = 3000;
 
 // ✅ Разрешаем CORS (на GitHub Pages укажи свой URL вместо *)
 app.use(cors({
-  origin: 'https://webdev-it.github.io', // 🔁 Лучше: 'https://yourusername.github.io'
+  origin: '*', // 🔁 Лучше: 'https://yourusername.github.io'
 }));
 
 // 📦 Middleware
