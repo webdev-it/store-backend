@@ -1,19 +1,14 @@
 {
-  "name": "shop-backend",
+  "name": "online-store-api",
   "version": "1.0.0",
+  "description": "Backend для интернет-магазина",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "ngrok": "^5.0.0-beta.2"
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
   }
 }
