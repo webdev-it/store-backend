@@ -134,3 +134,60 @@ app.delete('/favorites/:userId/:productId', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Сервер запущен на http://localhost:${PORT}`);
 });
+
+
+const CATEGORIES_FILE = './categories.json';
+
+function readCategories() {
+  if (!fs.existsSync(CATEGORIES_FILE)) {
+    fs.writeFileSync(CATEGORIES_FILE, '[]');
+  }
+  const data = fs.readFileSync(CATEGORIES_FILE);
+  return JSON.parse(data);
+}
+
+function saveCategories(categories) {
+  fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(categories, null, 2));
+}
+
+app.get('/categories', (req, res) => {
+  const categories = readCategories();
+  res.json(categories);
+});
+app.post('/categories', (req, res) => {
+  const categories = readCategories();
+  const newCategory = req.body;
+
+  if (!newCategory.name) {
+    return res.status(400).json({ error: 'Отсутствует имя категории' });
+  }
+
+  // Проверка на дублирование по имени (без учёта регистра)
+  if (categories.some(cat => cat.name.toLowerCase() === newCategory.name.toLowerCase())) {
+    return res.status(409).json({ error: 'Категория уже существует' });
+  }
+
+  newCategory.id = Date.now().toString();
+  categories.push(newCategory);
+  saveCategories(categories);
+
+  res.status(201).json(newCategory);
+});
+
+// Удалить категорию по id
+app.delete('/categories/:id', (req, res) => {
+  const categories = readCategories();
+  const id = req.params.id;
+  const filtered = categories.filter(c => c.id !== id);
+  if (filtered.length === categories.length) {
+    return res.status(404).json({ error: 'Категория не найдена' });
+  }
+  saveCategories(filtered);
+
+  // Удаляем все товары с этой категорией
+  const products = readJSON(PRODUCTS_FILE, []);
+  const productsFiltered = products.filter(p => p.category !== id);
+  writeJSON(PRODUCTS_FILE, productsFiltered);
+
+  res.json({ message: 'Категория и связанные товары удалены' });
+});
