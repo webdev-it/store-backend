@@ -46,7 +46,7 @@ app.post('/products', (req, res) => {
   const products = readJSON(PRODUCTS_FILE, []);
   const newProduct = req.body;
 
-  if (!newProduct.name || !newProduct.price || !newProduct.category) {
+  if (!newProduct.name || newProduct.price === undefined || newProduct.price === null || newProduct.category === undefined || newProduct.category === null || newProduct.category === "") {
     return res.status(400).json({ error: 'Отсутствуют обязательные поля' });
   }
 
