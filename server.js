@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
@@ -132,7 +133,7 @@ app.delete('/favorites/:userId/:productId', (req, res) => {
 
 // ======= 🔹 СТАРТ СЕРВЕРА =========
 app.listen(PORT, () => {
-  console.log(`✅ Сервер запущен на http://localhost:${PORT}`);
+  console.log(`✅ Сервер запущен на https://store-backend-zpkh.onrender.com`);
 });
 
 
@@ -191,3 +192,7 @@ app.delete('/categories/:id', (req, res) => {
 
   res.json({ message: 'Категория и связанные товары удалены' });
 });
+
+const uploadRouter = require('./upload');
+app.use('/upload', uploadRouter);
+app.use('/images', express.static(path.join(__dirname, '../miniappdlaprodazhi/images')));

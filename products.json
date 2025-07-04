@@ -38,5 +38,45 @@
     "image": "23",
     "category": "1751532580173",
     "id": "1751532598237"
+  },
+  {
+    "name": "x",
+    "price": 123,
+    "description": "d",
+    "image": "images/placeholder.png",
+    "category": "1751496206122",
+    "id": "1751554369370"
+  },
+  {
+    "name": "БМВ",
+    "price": 123,
+    "description": "пипипипи",
+    "image": "images/placeholder.png",
+    "category": "1751554859176",
+    "id": "1751554864664"
+  },
+  {
+    "name": "ьтовыв",
+    "price": 0,
+    "description": "ВЫыв",
+    "image": "images/placeholder.png",
+    "category": "1751554859176",
+    "id": "1751555052844"
+  },
+  {
+    "name": "вы",
+    "price": 12,
+    "description": "ыв",
+    "image": "images/placeholder.png",
+    "category": "1",
+    "id": "1751555623767"
+  },
+  {
+    "name": "x",
+    "price": 0,
+    "description": "м5",
+    "image": "images/1751555948095-545951.png",
+    "category": "1751554859176",
+    "id": "1751555948190"
   }
 ]
