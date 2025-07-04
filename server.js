@@ -195,4 +195,5 @@ app.delete('/categories/:id', (req, res) => {
 
 const uploadRouter = require('./upload');
 app.use('/upload', uploadRouter);
-app.use('/images', express.static(path.join(__dirname, '../miniappdlaprodazhi/images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
