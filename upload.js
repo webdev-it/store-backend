@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const router = express.Router();
-const UPLOAD_DIR = path.join(__dirname, '../miniappdlaprodazhi/images');
+const UPLOAD_DIR = path.join(__dirname, 'images');
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
