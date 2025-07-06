@@ -302,8 +302,12 @@ app.delete('/categories/:id', (req, res) => {
 
 const uploadRouter = require('./upload');
 app.use('/upload', uploadRouter);
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/files', express.static(path.join(__dirname, 'files')));
+
+// === СТАТИКА: отдаём изображения и файлы из папок miniappdlaprodazhi ===
+const IMAGES_DIR = path.join(__dirname, '../miniappdlaprodazhi/images');
+const FILES_DIR = path.join(__dirname, '../miniappdlaprodazhi/files');
+app.use('/images', express.static(IMAGES_DIR));
+app.use('/files', express.static(FILES_DIR));
 
 // Защищённая выдача файла по Telegram ID (POST /download)
 app.post('/download', (req, res) => {
