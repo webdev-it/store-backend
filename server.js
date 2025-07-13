@@ -14,7 +14,7 @@ const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 // ✅ Разрешаем CORS (на GitHub Pages укажи свой URL вместо *)
 app.use(cors({
-  origin: '*', // Разрешаем только GitHub Pages
+  origin: 'https://webdev-it.github.io', // Разрешаем только GitHub Pages
 }));
 
 // 📦 Middleware
@@ -71,23 +71,54 @@ function writePaymentLinks(data) {
 app.get('/products', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const products = readJSON(PRODUCTS_FILE, []);
-  res.json(products);
+  // Только одобренные товары для магазина
+  const onlyApproved = req.query.all === '1' ? products : products.filter(p => p.status === 'approved');
+  res.json(onlyApproved);
 });
 
 // Добавить новый товар
 app.post('/products', (req, res) => {
   const products = readJSON(PRODUCTS_FILE, []);
   const newProduct = req.body;
-
-  if (!newProduct.name || newProduct.price === undefined || newProduct.price === null || newProduct.category === undefined || newProduct.category === null || newProduct.category === "") {
+  if (!newProduct.name || newProduct.price === undefined || newProduct.price === null || newProduct.category === undefined || newProduct.category === null || newProduct.category === "" || !newProduct.ownerId) {
     return res.status(400).json({ error: 'Отсутствуют обязательные поля' });
   }
-
   newProduct.id = Date.now().toString();
+  newProduct.status = 'pending';
+  newProduct.createdAt = new Date().toISOString();
+  // ownerId — Telegram ID пользователя
   products.push(newProduct);
   writeJSON(PRODUCTS_FILE, products);
-
   res.status(201).json(newProduct);
+});
+
+// Получить товары на проверке (только для админа)
+app.get('/products/moderation', (req, res) => {
+  const products = readJSON(PRODUCTS_FILE, []);
+  const pending = products.filter(p => p.status === 'pending');
+  res.json(pending);
+});
+
+// Одобрить товар (только для админа)
+app.post('/products/:id/approve', (req, res) => {
+  const products = readJSON(PRODUCTS_FILE, []);
+  const id = req.params.id;
+  const idx = products.findIndex(p => p.id === id);
+  if (idx === -1) return res.status(404).json({ error: 'Товар не найден' });
+  products[idx].status = 'approved';
+  writeJSON(PRODUCTS_FILE, products);
+  res.json(products[idx]);
+});
+
+// Отклонить товар (только для админа)
+app.post('/products/:id/reject', (req, res) => {
+  const products = readJSON(PRODUCTS_FILE, []);
+  const id = req.params.id;
+  const idx = products.findIndex(p => p.id === id);
+  if (idx === -1) return res.status(404).json({ error: 'Товар не найден' });
+  products[idx].status = 'rejected';
+  writeJSON(PRODUCTS_FILE, products);
+  res.json(products[idx]);
 });
 
 // Удалить товар
