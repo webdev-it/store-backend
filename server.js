@@ -22,6 +22,7 @@ app.get('/products/:id', (req, res) => {
   res.json({ ...product, reviews, owner: owner ? { name: owner.name, telegram_id: owner.telegram_id, username: owner.username } : null, chatLink });
 });
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
