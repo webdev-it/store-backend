@@ -1,3 +1,26 @@
+// --- Получить детальную информацию о товаре с отзывами и ссылкой на чат ---
+app.get('/products/:id', (req, res) => {
+  const products = readJSON(PRODUCTS_FILE, []);
+  const product = products.find(p => p.id === req.params.id);
+  if (!product) return res.status(404).json({ error: 'Товар не найден' });
+  // Получить отзывы
+  let reviews = [];
+  try {
+    reviews = readReviews().filter(r => r.productId == req.params.id);
+  } catch {}
+  // Получить продавца (аккаунт)
+  let owner = null;
+  try {
+    const accounts = readAccounts();
+    owner = accounts[product.ownerId] || null;
+  } catch {}
+  // Ссылка на чат
+  let chatLink = null;
+  if (owner && owner.username) {
+    chatLink = `https://t.me/${owner.username}`;
+  }
+  res.json({ ...product, reviews, owner: owner ? { name: owner.name, telegram_id: owner.telegram_id, username: owner.username } : null, chatLink });
+});
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
