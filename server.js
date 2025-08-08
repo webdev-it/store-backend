@@ -1,3 +1,14 @@
+
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+const fetch = require('node-fetch'); // npm install node-fetch@2
+const axios = require('axios');
+const { v4: uuidv4 } = require('uuid');
+
 // --- Получить детальную информацию о товаре с отзывами и ссылкой на чат ---
 app.get('/products/:id', (req, res) => {
   const products = readJSON(PRODUCTS_FILE, []);
@@ -21,15 +32,6 @@ app.get('/products/:id', (req, res) => {
   }
   res.json({ ...product, reviews, owner: owner ? { name: owner.name, telegram_id: owner.telegram_id, username: owner.username } : null, chatLink });
 });
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-const fetch = require('node-fetch'); // npm install node-fetch@2
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
 
 // ======= 🔹 ОТЗЫВЫ И РЕЙТИНГИ =========
 const REVIEWS_FILE = './reviews.json';
