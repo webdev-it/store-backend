@@ -45,14 +45,6 @@ app.post('/reviews/:ownerId', (req, res) => {
   writeReviews(reviews);
   res.status(201).json({ message: 'Отзыв добавлен' });
 });
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-const fetch = require('node-fetch'); // npm install node-fetch@2
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
-const app = express();
-const PORT = process.env.PORT || 3000;
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '7012189549:AAGfOwMnTDDOvRi1AAez31SaQY-Tpyk9PNQ';
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
