@@ -1,4 +1,4 @@
-
+const PORT = process.env.PORT || 3000;
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -581,4 +581,5 @@ app.post('/cloudpayments_webhook', (req, res) => {
 });
 
 module.exports = app;
+
 
