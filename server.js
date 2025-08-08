@@ -1,3 +1,41 @@
+// ======= 🔹 ОТЗЫВЫ И РЕЙТИНГИ =========
+const REVIEWS_FILE = './reviews.json';
+function readReviews() {
+  if (!fs.existsSync(REVIEWS_FILE)) fs.writeFileSync(REVIEWS_FILE, '[]');
+  return JSON.parse(fs.readFileSync(REVIEWS_FILE));
+}
+function writeReviews(data) {
+  fs.writeFileSync(REVIEWS_FILE, JSON.stringify(data, null, 2));
+}
+
+// Получить все отзывы о продавце
+app.get('/reviews/:ownerId', (req, res) => {
+  const reviews = readReviews();
+  const ownerId = req.params.ownerId;
+  res.json(reviews.filter(r => r.ownerId == ownerId));
+});
+
+// Добавить отзыв о продавце (только если не оставлял ранее по этому товару)
+app.post('/reviews/:ownerId', (req, res) => {
+  const { productId, buyerId, buyerName, rating, text } = req.body;
+  if (!productId || !buyerId || !rating || !text) return res.status(400).json({ error: 'Не все поля заполнены' });
+  const reviews = readReviews();
+  // Запретить повторные отзывы по одному товару
+  if (reviews.some(r => r.ownerId == req.params.ownerId && r.productId == productId && r.buyerId == buyerId)) {
+    return res.status(409).json({ error: 'Вы уже оставляли отзыв по этому товару' });
+  }
+  reviews.push({
+    ownerId: req.params.ownerId,
+    productId,
+    buyerId,
+    buyerName,
+    rating: Number(rating),
+    text,
+    date: new Date().toISOString()
+  });
+  writeReviews(reviews);
+  res.status(201).json({ message: 'Отзыв добавлен' });
+});
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -14,7 +52,7 @@ const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 // ✅ Разрешаем CORS (на GitHub Pages укажи свой URL вместо *)
 app.use(cors({
-  origin: '*', // Разрешаем только GitHub Pages
+  origin: 'https://webdev-it.github.io', // Разрешаем только GitHub Pages
 }));
 
 // 📦 Middleware
@@ -518,5 +556,4 @@ app.post('/cloudpayments_webhook', (req, res) => {
 });
 
 module.exports = app;
-
 
