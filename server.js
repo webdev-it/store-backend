@@ -14,7 +14,7 @@ const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 // ✅ Разрешаем CORS (на GitHub Pages укажи свой URL вместо *)
 app.use(cors({
-  origin: 'https://webdev-it.github.io', // Разрешаем только GitHub Pages
+  origin: '*', // Разрешаем только GitHub Pages
 }));
 
 // 📦 Middleware
@@ -518,4 +518,5 @@ app.post('/cloudpayments_webhook', (req, res) => {
 });
 
 module.exports = app;
+
 
